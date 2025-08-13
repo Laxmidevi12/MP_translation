@@ -1,0 +1,71 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Translator</title>
+  <style>
+    body{font-family:system-ui;margin:20px}
+    #log{border:1px solid #ddd;height:320px;overflow:auto;padding:8px}
+    input,select,button{margin:6px}
+  </style>
+</head>
+<body>
+  <h2>Chat Translator (WebSocket)</h2>
+  <div>
+    <label>Source:</label>
+    <select id="src">
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+      <option value="sat">Santali</option>
+      <option value="brx">Bodo</option>
+      <option value="trp">Kokborok</option>
+      <option value="gon">Gondi</option>
+      <option value="kha">Khasi</option>
+      <option value="lus">Mizo</option>
+      <option value="lep">Lepcha</option>
+      <option value="te">Telugu</option>
+      <option value="ta">Tamil</option>
+    </select>
+    <label>Target:</label>
+    <select id="tgt">
+      <option value="hi">Hindi</option>
+      <option value="en">English</option>
+      <option value="sat">Santali</option>
+      <option value="brx">Bodo</option>
+      <option value="trp">Kokborok</option>
+      <option value="gon">Gondi</option>
+      <option value="kha">Khasi</option>
+      <option value="lus">Mizo</option>
+      <option value="lep">Lepcha</option>
+      <option value="te">Telugu</option>
+      <option value="ta">Tamil</option>
+    </select>
+  </div>
+  <div id="log"></div>
+  <div>
+    <input id="msg" placeholder="Type message..." size="60"/>
+    <button id="send">Send</button>
+  </div>
+
+<script>
+  const ws = new WebSocket("ws://localhost:8000/ws/chat");
+  const log = document.getElementById('log');
+  function add(line){ log.innerHTML += `<div>${line}</div>`; log.scrollTop=log.scrollHeight; }
+  ws.onopen = ()=> add('<i>Connected.</i>');
+  ws.onmessage = (e)=>{
+    const data = JSON.parse(e.data);
+    add(`<b>Translated:</b> ${data.translation}`);
+  };
+  document.getElementById('send').onclick = ()=>{
+    const text = document.getElementById('msg').value;
+    const src = document.getElementById('src').value;
+    const tgt = document.getElementById('tgt').value;
+    if(!text.trim()) return;
+    add(`<span>${text}</span>`);
+    ws.send(JSON.stringify({text, src, tgt, msgId: Date.now().toString()}));
+    document.getElementById('msg').value = "";
+  };
+</script>
+</body>
+</html>
