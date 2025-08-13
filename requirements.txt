@@ -1,8 +1,12 @@
 fastapi==0.110.0
 uvicorn==0.29.0
-torch==2.2.0
-torchaudio==2.2.0
+torch==2.5.1
+torchaudio==2.5.1
 transformers==4.39.3
 pydub==0.25.1
 ffmpeg-python==0.2.0
 moviepy==1.0.3
+numpy==1.26.4
+langdetect==1.0.9
+sentencepiece==0.2.0
+deep-translator==1.11.4
